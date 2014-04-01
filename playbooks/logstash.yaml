@@ -1,0 +1,27 @@
+- hosts: logstash
+  user: root
+  gather_facts: yes
+  vars:
+  # Java version
+     java_file: jre-7u51-linux-x64
+     java_path: jre1.7.0_51
+     java_home_dir: /usr/java
+  roles:
+       - common
+       - jdk
+       - logstash
+
+- hosts: logstash-agent
+  user: root
+  gather_facts: no
+  vars:
+  # Java version
+     java_file: jre-7u51-linux-x64
+     java_path: jre1.7.0_51
+     java_home_dir: /usr/java
+  # logstash
+     logstash_master: dhcp-13-150.nay.redhat.com
+  roles:
+       - common
+       - jdk
+       - logstash-agent

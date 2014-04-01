@@ -1,0 +1,20 @@
+##################################################
+# a. Append the new IP/hostname under the group. #
+# b. Comment/remove the old IP/hostname.         #
+##################################################
+
+[easemob]
+10.66.13.210
+
+[usertrid]
+#10.66.12.104
+
+
+[logstash]
+10.66.13.150
+
+[logstash-agent]
+10.66.13.58
+
+[ec2]
+ec2-54-199-165-254.ap-northeast-1.compute.amazonaws.com

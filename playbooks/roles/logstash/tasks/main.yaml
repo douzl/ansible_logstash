@@ -1,0 +1,43 @@
+---
+- name: install redis
+  yum: name=redis state=present
+
+- name: update the IP address in file /etc/redis.conf
+  lineinfile: dest=/etc/redis.conf regexp=^bind line="bind {{ ansible_eth0.ipv4.address }}"
+
+- name: start the service redis
+  service: name=redis enabled=yes state=started
+
+- name: insert iptables rule for elasticsearch
+  lineinfile: 
+        dest=/etc/sysconfig/iptables 
+        create=yes 
+        state=present 
+        insertafter="^:OUTPUT "
+        line="-A INPUT -p tcp --dport 6379 -j ACCEPT"
+  notify: restart iptables
+
+- name: put the elasticsearch package to /tmp
+  copy: src=elasticsearch-1.0.1.noarch.rpm dest=/tmp/elasticsearch-1.0.1.noarch.rpm
+
+- name: install the package elasticsearch
+  yum: name=/tmp/elasticsearch-1.0.1.noarch.rpm state=present
+
+- name: start the service elasticsearch
+  service: name=elasticsearch enabled=yes state=started
+
+- name: put the file /etc/elasticsearch/elasticsearch.yml
+  template: src=elasticsearch.yml dest=/etc/elasticsearch/elasticsearch.yml
+  notify: restart elasticsearch
+
+- name: insert iptables rule for elasticsearch
+  lineinfile: 
+        dest=/etc/sysconfig/iptables 
+        create=yes 
+        state=present 
+        insertafter="^:OUTPUT "
+        line="-A INPUT -p tcp --dport 9200 -j ACCEPT"
+  notify: restart iptables
+
+- name: put the file /etc/logstash/conf.d/central.conf
+  template: src=central.conf dest=/etc/logstash/conf.d/central.conf mode=755

@@ -1,0 +1,3 @@
+---
+- name: Put the file /etc/logstash/conf.d/shipper.conf
+  template: src=shipper.conf dest=/etc/logstash/conf.d/shipper.conf mode=644
